@@ -12,8 +12,8 @@ resource "kubernetes_secret_v1" "score_api_auth" {
 
   type = "Opaque"
 
-  string_data = {
-    password = var.basic_auth_password
+  data = {
+    password = base64encode(var.basic_auth_password)
   }
 }
 

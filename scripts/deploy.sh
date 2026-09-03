@@ -21,7 +21,7 @@ for cmd in docker minikube kubectl helm terraform curl; do
 done
 
 echo "==> Starting Minikube if needed"
-if ! minikube status --output=json >/dev/null 2>&1; then
+if ! minikube status -p minikube --output=json 2>/dev/null | grep -q '"Host": "Running"'; then
   minikube start
 fi
 
@@ -47,7 +47,7 @@ echo "==> Applying Terraform"
 terraform -chdir="${ROOT_DIR}/terraform" apply   -auto-approve   -input=false   -var="basic_auth_password=${BASIC_AUTH_PASSWORD}"   -var="image_repository=${IMAGE_REPOSITORY}"   -var="image_tag=${IMAGE_TAG}"   -var="namespace=${NAMESPACE}"   -var="ingress_host=${INGRESS_HOST}"
 
 echo "==> Waiting for deployment"
-kubectl rollout status   "deployment/score-api-score-api"   -n "${NAMESPACE}"   --timeout=180s
+kubectl rollout status   "deployment/score-api"   -n "${NAMESPACE}"   --timeout=180s
 
 echo "==> Waiting for ingress controller"
 kubectl wait   --namespace ingress-nginx   --for=condition=available   deployment/ingress-nginx-controller   --timeout=180s
@@ -72,7 +72,7 @@ PY
 
 echo "==> Checking POST /decision"
 DECISION_RESPONSE="$(
-  curl_with_host     -u "score:${BASIC_AUTH_PASSWORD}"     -H "Content-Type: application/json"     -X POST     "http://${INGRESS_HOST}/decision"     -d "{"client_id":"${CLIENT_ID}","amount":1500}"
+  curl_with_host     -u "score:${BASIC_AUTH_PASSWORD}"     -H "Content-Type: application/json"     -X POST     "http://${INGRESS_HOST}/decision"     -d "{\"client_id\":\"${CLIENT_ID}\",\"amount\":1500}"
 )"
 echo "${DECISION_RESPONSE}"
 
