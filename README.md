@@ -374,7 +374,7 @@ Expected response:
   "status":401,
   "message":"Invalid credentials."
 }
-
+```
 ---
 
 ## 8. Key Design Decisions
