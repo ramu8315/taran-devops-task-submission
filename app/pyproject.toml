@@ -1,0 +1,13 @@
+[project]
+name = "score-api"
+version = "1.0.0"
+description = "Dummy scoring service for the TaranDM DevOps take-home"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "sanic==25.12.1",
+]
+
+[tool.uv]
+# An application, not a distributable package: uv installs the dependencies and the source is
+# imported from the working directory. Keeps `uv sync` independent of the source tree.
+package = false
