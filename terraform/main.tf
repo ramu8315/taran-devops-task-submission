@@ -13,8 +13,8 @@ resource "kubernetes_secret_v1" "score_api_auth" {
   type = "Opaque"
 
   data = {
-    password = base64encode(var.basic_auth_password)
-  }
+  password = var.basic_auth_password
+}
 }
 
 resource "helm_release" "score_api" {
