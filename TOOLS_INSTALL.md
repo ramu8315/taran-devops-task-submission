@@ -9,6 +9,15 @@ sudo apt upgrade -y
 
 Install basic utilities:
 
+## 1. Update Ubuntu
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+Install required utilities and dependencies:
+
 ```bash
 sudo apt install -y \
   curl \
@@ -18,13 +27,17 @@ sudo apt install -y \
   ca-certificates \
   gnupg \
   lsb-release \
-  apt-transport-https
+  apt-transport-https \
+  python3 \
+  coreutils
 ```
 
 Verify:
 
 ```bash
 curl --version
+python3 --version
+base64 --version
 git --version
 unzip -v | head -1
 ```
