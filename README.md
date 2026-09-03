@@ -177,7 +177,9 @@ SUCCESS: Score API deployed and verified successfully.
 
 ## 5. Manual Verification
 
-### Kubernetes resources
+## Kubernetes Resources
+
+Verify the deployed Kubernetes resources:
 
 ```bash
 kubectl get all -n score-api
@@ -186,7 +188,46 @@ kubectl get ingress -n score-api
 kubectl get endpoints score-api -n score-api
 ```
 
-Verify the Pod:
+### Expected
+
+**Pods, Service and Deployment:**
+
+```text
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/score-api-xxxxxxxxxx-xxxxx  1/1     Running   0          ...
+
+NAME                TYPE        CLUSTER-IP   PORT(S)
+service/score-api   ClusterIP   10.x.x.x     80/TCP
+
+NAME                       READY   UP-TO-DATE   AVAILABLE
+deployment.apps/score-api  1/1     1            1
+```
+
+**Ingress:**
+
+```bash
+kubectl get ingress -n score-api
+```
+
+```text
+NAME        CLASS   HOSTS             ADDRESS
+score-api   nginx   score-api.local   ...
+```
+
+**Service Endpoints:**
+
+```bash
+kubectl get endpoints score-api -n score-api
+```
+
+```text
+NAME        ENDPOINTS            AGE
+score-api   10.244.0.x:8080      ...
+```
+
+The endpoint confirms that the `score-api` Service is correctly routing traffic to the running application Pod.
+
+### Verify the Pod
 
 ```bash
 kubectl get pods -n score-api
@@ -195,15 +236,36 @@ kubectl get pods -n score-api
 Expected:
 
 ```text
-READY   STATUS
-1/1     Running
+NAME                            READY   STATUS    RESTARTS
+score-api-xxxxxxxxxx-xxxxx      1/1     Running   0
 ```
 
-Verify the Deployment:
+### Verify the Deployment
 
 ```bash
 kubectl rollout status deployment/score-api -n score-api
 ```
+
+Expected:
+
+```text
+deployment "score-api" successfully rolled out
+```
+
+### Verify the Secret
+
+```bash
+kubectl get secret score-api-auth -n score-api
+```
+
+Expected:
+
+```text
+NAME             TYPE     DATA   AGE
+score-api-auth   Opaque   1      ...
+```
+
+> **Security:** Secret values are not displayed in the README or execution evidence.
 
 ---
 
@@ -304,6 +366,14 @@ curl -i \
   http://score-api.local/decision \
   -d '{"client_id":"CL-0001","amount":1500}'
 ```
+Expected response:
+
+```json
+{
+  "description":"Unauthorized",
+  "status":401,
+  "message":"Invalid credentials."
+}
 
 ---
 

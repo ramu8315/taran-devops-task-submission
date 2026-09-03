@@ -323,6 +323,12 @@ terraform version
 echo "===== curl ====="
 curl --version | head -1
 
+echo "===== Python ====="
+python3 --version
+
+echo "===== base64 ====="
+base64 --version | head -1
+
 echo "===== Git ====="
 git --version
 ```
@@ -337,6 +343,8 @@ Helm        PASS
 Terraform   PASS
 curl        PASS
 Git         PASS
+python3     PASS
+base64      PASS
 ```
 
 **Installation complete.**
