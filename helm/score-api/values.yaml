@@ -1,0 +1,67 @@
+replicaCount: 1
+
+image:
+  repository: score-api
+  tag: local
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+env:
+  logLevel: INFO
+  serviceVersion: local
+
+auth:
+  # Created by Terraform. Never put the password itself in values.yaml.
+  existingSecret: score-api-auth
+  passwordKey: password
+
+ingress:
+  enabled: true
+  className: nginx
+  host: score-api.local
+  path: /
+  pathType: Prefix
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+probes:
+  liveness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  readiness:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+    timeoutSeconds: 2
+    failureThreshold: 3
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+serviceAccount:
+  create: true
+  automount: false

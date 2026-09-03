@@ -1,0 +1,23 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+.terraform.lock.hcl
+
+# Local overrides / secrets
+*.tfvars
+*.tfvars.json
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Runtime artifacts
+__pycache__/
+*.py[cod]
